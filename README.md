@@ -1,10 +1,13 @@
 # Random Image Generator
 
+<a href="https://hostcs80.tumblr.com" target="_blank">**Travel to Site**</a>
+
 ## Built With
 
 * BootStrap - The web framework used
 * JQuery - Javascript library
 * Flickr Api - Image finding tool
+* Tumblr - Hosting
 
 ## About 
 
