@@ -1,0 +1,190 @@
+<!DOCTYPE HTML>
+<!-- Made by Daniel Naryshev for CS80 Final Project!-->
+
+<!--  This website takes the users input and creates a slideshow of images pulled from flickr. !-->
+
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title> Random Images </title>
+
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: Gray;
+    }
+
+    h1 {
+      text-align: center;
+      color: blue;
+    }
+
+    button {
+      display: block;
+      margin: 10px 0 10px 0;
+      width: 200px;
+    }
+
+    #searchword {
+      width: 60%;
+    }
+
+    #disclaimer {
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      color: white;
+    }
+
+    #mainDiv {
+      display: block;
+    }
+
+    .btn-block {
+      width: 70%;
+    }
+    .well{
+      overflow:hidden;
+    }
+    #img{
+      display:inline-block;
+    }
+    #picture{
+      margin: 20px;
+      height: 80%;
+      width:90%;
+    }
+  </style>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+</head>
+
+<script type="text/javascript">
+  var resetHolder = false;
+  var timer;
+  function formRandom() {
+
+    var rndArray = ['bird', 'potato', 'brick', 'brake', 'bath', 'brush', 'frame', 'jewel', 'box', 'thread', 'army', 'whistle', 'arch', 'key', 'plate',
+      'bottle', 'match', 'boat', 'seed', 'goat', 'egg', 'clock', 'pin', 'fly', 'table', 'spring', 'island', 'carriage',
+      'mountain', 'oven', 'cloud', 'bed', 'ball', 'stem', 'cow', 'plane', 'monkey', 'Mountain', 'feather', 'fowl',
+      'stamp', 'rail', 'kettle', 'dog', 'puppy', 'curtain', 'snake', 'watch', 'leaf', 'bell', 'store', 'face', 'stick', 'tray',
+      'camera', 'spoon', 'button', 'trousers', 'book', 'net', 'bag', 'chain', 'ticket', 'school', 'sheep',
+      'cake', 'house', 'knot', 'ship', 'horse', 'town', 'sock', 'wire', 'berry', 'cat', 'moon', 'engine', 'basket', 'star', 'circle', 'glove', 'scissors', 'ring', 'bridge', 'flag', 'station', 'hammer', 'drawer', 'umbrella', 'eye', 'ant',
+      'street', 'pocket', 'cushion', 'shoe', 'shelf', 'floor',
+      'sun', 'wheel', 'collar', 'bone', 'horn', 'tree', 'cart', 'angle', 'receipt', 'cord', 'fork', 'drain', 'wing', 'garden', 'parcel', 'bee', 'sponge', 'spade',
+      'root', 'orange', 'brain', 'line', 'bucket', 'fish', 'coat', 'lock', 'sail', 'farm', 'door', 'office', 'arm', 'card', 'wall', 'hat', 'map', 'window', 'library', 'train', 'shirt'
+    ];
+    var rand = rndArray[Math.floor(Math.random() * rndArray.length)];
+
+    $('#searchWord').attr('value', rand);
+    formChanged(rand);
+
+  }
+  function sleep (time) {
+      return new Promise((resolve) => setTimeout(resolve, time));
+    }
+  function newkeyword(){
+
+      resetHolder = true;
+      
+  }
+  function search(ele) {
+     if (event.keyCode == 13) {
+          formChanged();
+     }
+  }
+  function formChanged() {
+
+      var userKeyword = document.getElementById('searchWord');
+      var keyword = userKeyword.value;
+         
+      (function me() {
+
+        $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?", {
+            tags: keyword,
+            tagmode: "all",
+            format: "json",
+            safe_search: "1"
+          },
+          function(data) {
+            
+              var rnd = Math.floor(Math.random() * data.items.length);
+              var i = 0;
+              var image_src = data.items[rnd]['media']['m'].replace("_m", "_b");
+              if(resetHolder === true){
+                  clearTimeout(timer);
+                  $('#searchWord').attr('value', '');           
+                  $('#picture').attr('src', 'https://preview.ibb.co/bE1n15/placeholder3.png');
+                   resetHolder = false;
+                   console.log("reset");
+                   return;
+
+                }   
+              $('#picture').attr('src', image_src);
+              $('#picture').attr('alt', keyword);
+              console.log("loaded ");
+              $("#picture").css('display', 'block');
+              
+             
+              
+          });
+        
+            
+            timer = setTimeout(me, 2500);
+        
+        
+        })();
+       
+  }
+</script>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Random Image Search</h2>
+    <div class="well clearfix">
+
+    <div class="row">
+
+        <div class="col-sm-4">
+          <input type="text" id="searchWord">
+          <button id="searchkeyword" class="btn  btn-primary btn-block " data-toggle="button" onclick="formChanged()">Search Picture</button>
+          <button id="randomButton" class="btn  btn-primary btn-block" data-toggle="button" onclick="formRandom()">Random Picture </button>
+          <button id="resetButton" class="btn btn-secondary btn-block" onclick="newkeyword()">Reset</button>
+        </div>
+        <div class="col-sm-8">
+            <img id="picture" alt="placeholder" src="https://preview.ibb.co/bE1n15/placeholder3.png" >
+            <div class="container">
+                <div class="row">
+                    <div id="1.1" class="col-sm-1 col-md-3"></div>
+                    <div id="1.1" class="col-sm-1 col-md-3"></div>
+                    <div id="1.1" class="col-sm-1 col-md-3"></div>
+                </div>
+                <div class="row">
+                    <div id="2.1" class="col-sm-1 col-md-3"></div>
+                    <div id="2.2" class="col-sm-1 col-md-3"></div>
+                    <div id="2.3" class="col-sm-1 col-md-3"></div>
+                </div>
+                <div class="row">
+                    <div id="3.1" class="col-sm-1 col-md-3"></div>
+                    <div id="3.2" class="col-sm-1 col-md-3"></div>
+                    <div id="3.3" class="col-sm-1 col-md-3"></div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+   </div>
+
+      <div id="disclaimer">
+        <strong> Disclaimer: Not all pictures are accurate.</strong>
+      </div>
+    </div>
+  </div>
+
+
+</body>
+
+</html>
